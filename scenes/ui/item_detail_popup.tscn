@@ -1,0 +1,14 @@
+ItemDetailPopup (Control)
+HBoxContainer
+├─ OptionButton (Sort)
+├─ OptionButton (Filter)
+├─ Panel
+│  ├─ VBoxContainer
+│  │  ├─ NameLabel
+│  │  ├─ RarityLabel
+│  │  ├─ StatsLabel
+│  │  ├─ DescriptionLabel
+│  │  ├─ CloseButton
+├─ AnimationPlayer
+├─ Tooltip (Control)
+   ├─ Background (ColorRect)

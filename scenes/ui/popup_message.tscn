@@ -1,0 +1,4 @@
+PopupMessage (Control)
+├─ Panel (Panel)
+│  └─ MessageLabel (Label)
+└─ AnimationPlayer (AnimationPlayer)

@@ -1,0 +1,13 @@
+InventoryUI (Control)
+├─ CanvasLayer
+│  ├─ DimBackground (ColorRect)
+│  ├─ Panel (PanelContainer)
+│  │  ├─ VBoxContainer
+│  │  │  ├─ TitleLabel (Label)
+│  │  │  ├─ TabBar (TabBar)   # Companions | Weapons
+│  │  │  ├─ ScrollContainer
+│  │  │  │  └─ GridContainer
+│  │  │  │     └─ InventoryItemCard (instanced)
+│  │  │  ├─ CloseButton (Button)
+│  ├─ PopupLayer (CanvasLayer)
+│     └─ PopupManager

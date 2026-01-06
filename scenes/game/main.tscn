@@ -1,0 +1,53 @@
+Main (Node)
+├─ GachaManager (Node) [scripts/managers/GachaManager.gd]
+├─ PlayerData (Node) [scripts/managers/PlayerData.gd]
+├─ UIManager (Node) [scripts/managers/UIManager.gd]
+├─ AudioManager (Node) [optional, for SFX & music]
+├─ CanvasLayer
+│   ├─ DimBackground (ColorRect)
+│   ├─ PopupLayer
+│   │   └─ PopupManager (PopupManager.tscn)
+│   ├─ GachaUI (GachaUI.tscn)
+│   │   └─ BannerPanel (BannerPanel.tscn)
+│   ├─ InventoryUI (InventoryUI.tscn)
+│   └─ CampfireUI (CampfireUI.tscn)
+└─ AnimationPlayer (AnimationPlayer)
+
+[gd_scene load_steps=6 format=3]
+
+[node name="Main" type="Node"]
+script = ExtResource( 1 ) # GameManager.gd (optional)
+
+[node name="GachaManager" type="Node" parent="."]
+script = ExtResource( 2 ) # GachaManager.gd
+
+[node name="PlayerData" type="Node" parent="."]
+script = ExtResource( 3 ) # PlayerData.gd
+
+[node name="UIManager" type="Node" parent="."]
+script = ExtResource( 4 ) # UIManager.gd
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 1
+
+[node name="DimBackground" type="ColorRect" parent="CanvasLayer"]
+color = Color(0,0,0,0.5)
+rect_min_size = Vector2(1920,1080)
+visible = false
+
+[node name="PopupLayer" type="Node" parent="CanvasLayer"]
+
+[node name="PopupManager" parent="CanvasLayer/PopupLayer" instance=ExtResource(5)]
+
+[node name="GachaUI" parent="CanvasLayer" instance=ExtResource(6)]
+position = Vector2(0,0)
+visible = false
+
+[node name="InventoryUI" parent="CanvasLayer" instance=ExtResource(7)]
+position = Vector2(0,0)
+visible = false
+
+[node name="CampfireUI" parent="CanvasLayer" instance=ExtResource(8)]
+position = Vector2(0,0)
+visible = false
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]

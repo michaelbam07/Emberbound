@@ -1,0 +1,14 @@
+GachaUI (Control)        [script: gacha_ui.gd – optional]
+├── CanvasLayer
+│   ├── DimBackground (ColorRect)
+│   ├── BannerPanel (Control)   [script: BannerPanel.gd]
+│   │   ├── Panel
+│   │   │   ├── TitleLabel (Label)
+│   │   │   ├── FeaturedUnits (VBoxContainer)
+│   │   │   ├── PullButtons (HBoxContainer)
+│   │   │   │   ├── SinglePullButton (Button)
+│   │   │   │   └── MultiPullButton (Button)
+│   │   │   └── CloseButton (Button)
+│   └── PopupLayer (Node)
+│       └── PopupManager (Node) [script: PopupManager.gd]
+├─ AnimationPlayer (AnimationPlayer)

@@ -1,0 +1,7 @@
+BannerPanel (Control)
+├─ TitleLabel (Label)
+├─ FeaturedUnits (VBoxContainer)
+├─ SinglePullButton (Button)
+├─ MultiPullButton (Button)
+├─ CloseButton (Button)
+└─ AnimationPlayer (AnimationPlayer)

@@ -1,0 +1,10 @@
+InventoryItemCard (PanelContainer)
+├─ Border (TextureRect)        # Glow / animated frame
+├─ VBoxContainer
+│  ├─ Icon (TextureRect)
+│  ├─ NameLabel (Label)
+│  ├─ RarityLabel (Label)
+│  ├─ LevelLabel (Label)
+├─ AnimationPlayer
+├─ Tooltip (Control)
+   ├─ Background (ColorRect)

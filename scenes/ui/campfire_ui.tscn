@@ -1,0 +1,5 @@
+CampfireUI (Control)
+├─ CampfireSprite (TextureRect)
+├─ BonusPullButton (Button)
+├─ CloseButton (Button)
+└─ AnimationPlayer (AnimationPlayer)

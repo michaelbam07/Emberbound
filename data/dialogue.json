@@ -1,0 +1,100 @@
+extends Node
+
+# =====================
+# Dialogue Database
+# =====================
+const DIALOGUE = {
+	# --- Campfire / Idle Banter ---
+	"campfire_idle": [
+		{"speaker": "ASH-9", "text": "You ever notice the fire hums louder when no one's talking?"},
+		{"speaker": "VIREX", "text": "Thermal oscillation. Or ghosts. One of the two."},
+		{"speaker": "ASH-9", "text": "I miss the smell of rain. Real rain, not that acid mist from the wastes."},
+		{"speaker": "VIREX", "text": "Rain is just liquid entropy. Keep your circuits dry, Ash."},
+		{"speaker": "ASH-9", "text": "If we don't make it back, tell them I died doing something cool."},
+		{"speaker": "VIREX", "text": "I'll tell them you tripped over a pebble. It's more statistically likely."},
+		{"speaker": "ASH-9", "text": "Staring into the embers makes me think about the Old World."},
+		{"speaker": "VIREX", "text": "The Old World is a data fragment. Focus on the next sector."},
+		{"speaker": "ASH-9", "text": "Is it just me, or does the sand taste... metallic today?"},
+		{"speaker": "VIREX", "text": "Stop eating the sand, Ash."}
+	],
+
+	# --- Loot & Gacha Triggers ---
+	"after_pull_common": [
+		{"speaker": "ASH-9", "text": "Another piece of scrap for the pile."},
+		{"speaker": "VIREX", "text": "Efficiency is found in the mundane."},
+		{"speaker": "ASH-9", "text": "Well, it's better than throwing rocks."}
+	],
+	"after_pull_rare": [
+		{"speaker": "ASH-9", "text": "Now we're talking. This has some weight to it."},
+		{"speaker": "VIREX", "text": "Weapon specs are within the top 15th percentile. Acceptable."},
+		{"speaker": "ASH-9", "text": "Finally, something that doesn't rattle when I shake it."}
+	],
+	"after_pull_legendary": [
+		{"speaker": "ASH-9", "text": "Huh. Guess fate finally blinked."},
+		{"speaker": "VIREX", "text": "Anomaly detected. This power signature shouldn't exist here."},
+		{"speaker": "ASH-9", "text": "Keep your voice down, Virex. Everyone's gonna want to steal this."}
+	],
+	"after_pull_mythic": [
+		{"speaker": "VIREX", "text": "Calculation error. Probability was 0.001%. How?"},
+		{"speaker": "ASH-9", "text": "I can feel the air vibrating... This thing is a monster."},
+		{"speaker": "VIREX", "text": "User, I suggest immediate synchronization. This is... divine."}
+	],
+
+	# --- Combat & Danger ---
+	"entering_boss_room": [
+		{"speaker": "ASH-9", "text": "Big, ugly, and stands between us and the payday. Let's go."},
+		{"speaker": "VIREX", "text": "Threat levels are spiking. Optimizing combat subroutines."},
+		{"speaker": "ASH-9", "text": "If I die, Virex gets my collection of pre-war spoons."},
+		{"speaker": "VIREX", "text": "I do not want the spoons, Ash."}
+	],
+	"low_health": [
+		{"speaker": "ASH-9", "text": "Seeing double... and both of them look mad."},
+		{"speaker": "VIREX", "text": "Structural integrity at 15%. Retreat is logical."},
+		{"speaker": "ASH-9", "text": "Just a scratch. A very deep, bleeding scratch."},
+		{"speaker": "VIREX", "text": "Vital signs are becoming... rhythmic. Not in a good way."}
+	],
+	"enemy_spotted_large": [
+		{"speaker": "ASH-9", "text": "That's a lot of teeth for one creature."},
+		{"speaker": "VIREX", "text": "Target size exceeds standard parameters. Aim for the vents."},
+		{"speaker": "ASH-9", "text": "Why is the big one always looking at me?"}
+	],
+
+	# --- Exploration Banter ---
+	"empty_room": [
+		{"speaker": "ASH-9", "text": "Dust and echoes. My favorite."},
+		{"speaker": "VIREX", "text": "Scanning... nothing but silicon and disappointment."},
+		{"speaker": "ASH-9", "text": "Maybe the treasure is the friends we made along the— okay, even I can't say that with a straight face."}
+	],
+	"found_secret": [
+		{"speaker": "VIREX", "text": "Structural anomaly detected. A hidden compartment."},
+		{"speaker": "ASH-9", "text": "Nice eye, Virex! Let's see what they tried to hide."},
+		{"speaker": "ASH-9", "text": "Hidden walls. The oldest trick in the book."}
+	],
+	"dark_area": [
+		{"speaker": "ASH-9", "text": "I don't like the way the shadows are moving."},
+		{"speaker": "VIREX", "text": "Shadows do not move, Ash. The light source does. Usually towards something hungry."}
+	],
+
+	# --- Character Specific Quirks ---
+	"virex_glitch": [
+		{"speaker": "VIREX", "text": "E-e-error. Logic loop encountered. Does a machine dream of... sheep? No, that's ridiculous."},
+		{"speaker": "ASH-9", "text": "You okay there, chrome-dome? Your eye is twitching."}
+	],
+	"ash_humming": [
+		{"speaker": "ASH-9", "text": "(Hums a faint, distorted tune from the Old World)"},
+		{"speaker": "VIREX", "text": "Your pitch is 440Hz off. It is causing my processors to itch."}
+	]
+}
+
+# =====================
+# Logic Functions
+# =====================
+
+func get_random_dialogue(trigger_id: String) -> Dictionary:
+	if DIALOGUE.has(trigger_id):
+		var list = DIALOGUE[trigger_id]
+		return list[randi() % list.size()]
+	return {"speaker": "???", "text": "..."}
+
+func get_full_conversation(trigger_id: String) -> Array:
+	return DIALOGUE.get(trigger_id, [])

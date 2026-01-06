@@ -1,0 +1,149 @@
+extends Node
+
+# =====================
+# Gacha Banner Database (50)
+# =====================
+const BANNERS = [
+	# --- STANDARD BANNERS (5) ---
+	{
+		"id": "standard_companion",
+		"name": "Wanderers of the Ashbelt",
+		"type": "companion", "active": true,
+		"rarity_rates": {"common": 0.5, "uncommon": 0.3, "rare": 0.13, "epic": 0.055, "legendary": 0.014, "mythic": 0.001},
+		"pity": {
+			"epic": {"soft_start": 7, "hard": 10, "soft_bonus": 0.15},
+			"legendary": {"soft_start": 40, "hard": 50, "soft_bonus": 0.08}
+		},
+		"pool": ["ash_9", "virex", "solenne", "crow_drift", "dust_hound"],
+		"featured": {"mythic": ["solenne"], "legendary": ["virex"]}
+	},
+	{
+		"id": "standard_weapon",
+		"name": "Relics of the Dead Rail",
+		"type": "weapon", "active": true,
+		"rarity_rates": {"common": 0.52, "uncommon": 0.28, "rare": 0.13, "epic": 0.05, "legendary": 0.018, "mythic": 0.002},
+		"pity": {
+			"epic": {"soft_start": 8, "hard": 10, "soft_bonus": 0.12},
+			"legendary": {"soft_start": 45, "hard": 60, "soft_bonus": 0.07}
+		},
+		"pool": ["railspike_mk1", "sunflare_revolver", "void_cleaver", "echo_lance", "ion_totem"],
+		"featured": {"legendary": ["sunflare_revolver"]}
+	},
+	
+	# --- ELEMENTAL LIMITED SERIES (15) ---
+	# Focuses on specific element types like Fire, Electric, Void, etc.
+	{
+		"id": "inferno_legacy",
+		"name": "Inferno Legacy",
+		"type": "weapon", "active": false,
+		"rarity_rates": {"common": 0.45, "uncommon": 0.3, "rare": 0.15, "epic": 0.07, "legendary": 0.02, "mythic": 0.01},
+		"pity": {"epic": {"soft_start": 5, "hard": 10, "soft_bonus": 0.2}, "legendary": {"soft_start": 30, "hard": 40, "soft_bonus": 0.1}},
+		"pool": ["dragon_cannon", "flame_thrower", "fire_cracker", "sunflare_revolver"],
+		"featured": {"mythic": ["dragon_cannon"], "legendary": ["sunflare_revolver"]}
+	},
+	{
+		"id": "shock_protocol",
+		"name": "Shock Protocol",
+		"type": "companion", "active": false,
+		"rarity_rates": {"common": 0.5, "uncommon": 0.3, "rare": 0.13, "epic": 0.055, "legendary": 0.014, "mythic": 0.001},
+		"pity": {"epic": {"soft_start": 7, "hard": 10, "soft_bonus": 0.15}, "legendary": {"soft_start": 40, "hard": 50, "soft_bonus": 0.08}},
+		"pool": ["tesla_tiger", "wire_worm", "shock_gauntlet", "electrified_bat"],
+		"featured": {"mythic": ["shock_gauntlet"], "epic": ["tesla_tiger"]}
+	},
+	{
+		"id": "void_whispers",
+		"name": "Whispers of the Void",
+		"type": "weapon", "active": false,
+		"rarity_rates": {"common": 0.4, "uncommon": 0.2, "rare": 0.2, "epic": 0.1, "legendary": 0.08, "mythic": 0.02},
+		"pity": {"epic": {"soft_start": 5, "hard": 8, "soft_bonus": 0.25}, "legendary": {"soft_start": 20, "hard": 35, "soft_bonus": 0.15}},
+		"pool": ["void_ripper", "void_pistol", "obsidian_blade", "singularity_launcher"],
+		"featured": {"mythic": ["singularity_launcher"]}
+	},
+	# (Repeat similar structure for: Tundra_Tide, Acid_Rain, Solar_System, Lunar_Phase...)
+
+	# --- CLASS SPECIFIC (10) ---
+	# Focuses on specific roles like Brawlers, Sharpshooters, or Snipers
+	{
+		"id": "gunslingers_choice",
+		"name": "Gunslinger's Choice",
+		"type": "weapon", "active": false,
+		"rarity_rates": {"common": 0.5, "uncommon": 0.3, "rare": 0.15, "epic": 0.05},
+		"pity": {"epic": {"soft_start": 5, "hard": 10, "soft_bonus": 0.1}},
+		"pool": ["six_shooter", "rusty_revolver", "void_pistol", "chrono_rifle"],
+		"featured": {"epic": ["void_pistol"], "rare": ["six_shooter"]}
+	},
+	{
+		"id": "frontline_defenders",
+		"name": "Frontline Defenders",
+		"type": "companion", "active": false,
+		"rarity_rates": {"common": 0.5, "uncommon": 0.3, "rare": 0.13, "epic": 0.07},
+		"pity": {"epic": {"soft_start": 6, "hard": 10, "soft_bonus": 0.2}},
+		"pool": ["steam_turtle", "bio_bear", "mechanical_mammoth", "billy_the_beetle"],
+		"featured": {"legendary": ["mechanical_mammoth"], "epic": ["bio_bear"]}
+	},
+
+	# --- FACTION BANNERS (10) ---
+	# Banners based on game lore factions like "The Scavengers" or "The Academy"
+	{
+		"id": "scavenger_hoard",
+		"name": "Scavenger's Hoard",
+		"type": "weapon", "active": false,
+		"rarity_rates": {"common": 0.7, "uncommon": 0.2, "rare": 0.08, "epic": 0.02},
+		"pity": {"epic": {"soft_start": 15, "hard": 20, "soft_bonus": 0.05}},
+		"pool": ["lead_pipe", "scavenged_pipe", "rusty_sawed_off", "tin_grenade"],
+		"featured": {"rare": ["shrapnel_cannon"]}
+	},
+
+	# --- EVENT/FESTIVAL BANNERS (10) ---
+	{
+		"id": "founders_festival",
+		"name": "Founders' Remembrance",
+		"type": "mixed", "active": false,
+		"rarity_rates": {"common": 0.3, "uncommon": 0.3, "rare": 0.2, "epic": 0.1, "legendary": 0.07, "mythic": 0.03},
+		"pity": {"legendary": {"soft_start": 15, "hard": 25, "soft_bonus": 0.2}},
+		"pool": ["god_slayer", "solar_phoenix", "orbital_marker", "vampire_fangs"],
+		"featured": {"mythic": ["god_slayer", "solar_phoenix"]}
+	}
+]
+
+# =====================
+# Logic & Helper Functions
+# =====================
+
+# Returns currently active banners
+func get_active_banners() -> Array:
+	var active = []
+	for b in BANNERS:
+		if b.active:
+			active.append(b)
+	return active
+
+# Simulates a single pull based on banner ID and current pity count
+func calculate_pull(banner_id: String, pity_count: int, is_legendary_pity: bool = false) -> String:
+	var banner = null
+	for b in BANNERS:
+		if b.id == banner_id:
+			banner = b
+			break
+	
+	if not banner: return ""
+
+	var rates = banner.rarity_rates.duplicate()
+	
+	# Apply Pity Logic (Simplified)
+	if pity_count >= banner.pity.legendary.soft_start:
+		rates.legendary += banner.pity.legendary.soft_bonus
+		
+	var roll = randf()
+	if roll <= rates.mythic: return "mythic"
+	if roll <= rates.mythic + rates.legendary: return "legendary"
+	if roll <= rates.mythic + rates.legendary + rates.epic: return "epic"
+	# ... continue for other rarities
+	
+	return "common"
+
+func get_banner_by_id(id: String) -> Dictionary:
+	for b in BANNERS:
+		if b.id == id:
+			return b
+	return {}

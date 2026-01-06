@@ -1,102 +1,100 @@
+# core/gacha/PitySystem.gd
 extends RefCounted
 class_name PitySystem
 
-# -------------------------------------------------
-# Pity Rule Definition
-# -------------------------------------------------
-class PityRule:
+# =============================================
+# Inner Rule Class (Pure Beauty)
+# =============================================
+class PityRule extends RefCounted:
 	var rarity: String
 	var hard_pity: int
 	var soft_pity_start: int
-	var soft_pity_bonus: float
-
-	func _init(_rarity: String, _hard: int, _soft_start: int, _soft_bonus: float):
+	var soft_pity_bonus: float  # Bonus per pull after soft start
+	
+	func _init(_rarity: String, _hard: int, _soft_start: int, _soft_bonus: float) -> void:
 		rarity = _rarity
 		hard_pity = _hard
 		soft_pity_start = _soft_start
 		soft_pity_bonus = _soft_bonus
 
-# -------------------------------------------------
-# Banner Rules
-# -------------------------------------------------
-var banner_rules: Dictionary = {} # banner_id -> Array[PityRule]
+# =============================================
+# Banner-Specific Rules
+# =============================================
+var banner_rules: Dictionary = {}  # banner_id → Array[PityRule]
 
-# -------------------------------------------------
-# Registration (called at startup)
-# -------------------------------------------------
-func register_banner(banner_id: String, rules: Array) -> void:
+# =============================================
+# Registration (Called from BannerBase or startup)
+# =============================================
+func register_banner(banner_id: String, rules: Array[PityRule]) -> void:
 	banner_rules[banner_id] = rules
 
-# -------------------------------------------------
-# Adjust base rates based on pity counters
-# -------------------------------------------------
-func apply_pity(banner_id: String, pity_state: Dictionary, base_table: Dictionary) -> Dictionary:
+# =============================================
+# Main Entry Point — Returns Adjusted Rates
+# =============================================
+func get_adjusted_rates(banner_id: String, pity_counters: Dictionary, base_rates: Dictionary) -> Dictionary:
 	if not banner_rules.has(banner_id):
-		return base_table.duplicate(true)
-
-	var adjusted := base_table.duplicate(true)
-
-	for rule: PityRule in banner_rules[banner_id]:
-		var count: int = pity_state.get(rule.rarity, 0)
-
-		# ---------------- Hard pity ----------------
+		return base_rates.duplicate()
+	
+	var rules: Array[PityRule] = banner_rules[banner_id]
+	var adjusted := base_rates.duplicate()
+	
+	for rule in rules:
+		var count: int = pity_counters.get(rule.rarity, 0)
+		
+		# HARD PITY — Force guarantee
 		if count >= rule.hard_pity:
-			return _force_min_rarity(adjusted, rule.rarity)
-
-		# ---------------- Soft pity ----------------
+			return _force_minimum_rarity(adjusted, rule.rarity)
+		
+		# SOFT PITY — Exponential ramp-up
 		if count >= rule.soft_pity_start:
-			var steps: int = count - rule.soft_pity_start + 1
-			var boost: float = 1.0 + (steps * rule.soft_pity_bonus)
-			adjusted = _boost_rarity(adjusted, rule.rarity, boost)
+			var pulls_into_soft := count - rule.soft_pity_start + 1
+			var multiplier := 1.0 + (pulls_into_soft * rule.soft_pity_bonus)
+			adjusted[rule.rarity] *= multiplier
+	
+	return _normalize_rates(adjusted)
 
-	return _normalize(adjusted)
-
-# -------------------------------------------------
-# Pick a rarity based on adjusted table
-# -------------------------------------------------
-func get_rarity_with_pity(base_table: Dictionary, pity_state: Dictionary, banner_id: String) -> String:
-	var adjusted := apply_pity(banner_id, pity_state, base_table)
-
-	var roll := randf()  # 0.0 - 1.0
-	var cumulative := 0.0
-	for rarity in ["common", "uncommon", "rare", "epic", "legendary", "mythic"]:
-		if not adjusted.has(rarity):
-			continue
-		cumulative += adjusted[rarity]
-		if roll <= cumulative:
+# =============================================
+# Roll with Pity (Convenience Wrapper)
+# =============================================
+func roll_rarity(banner_id: String, pity_counters: Dictionary, base_rates: Dictionary) -> String:
+	var adjusted = get_adjusted_rates(banner_id, pity_counters, base_rates)
+	
+	var roll := randf()
+	var accum := 0.0
+	for rarity in adjusted.keys():
+		accum += adjusted[rarity]
+		if roll <= accum:
 			return rarity
-	return "common"
+	
+	return "common"  # Fallback (should never hit)
 
-# -------------------------------------------------
-# Helpers for adjusting probabilities
-# -------------------------------------------------
-func _force_min_rarity(table: Dictionary, min_rarity: String) -> Dictionary:
-	var out := {}
+# =============================================
+# Private Helpers
+# =============================================
+func _force_minimum_rarity(table: Dictionary, min_rarity: String) -> Dictionary:
+	var result := {}
+	var min_rank := _rarity_rank(min_rarity)
+	
 	for r in table.keys():
-		out[r] = table[r] if _rank(r) >= _rank(min_rarity) else 0.0
-	return _normalize(out)
+		result[r] = table[r] if _rarity_rank(r) >= min_rank else 0.0
+	
+	return _normalize_rates(result)
 
-func _boost_rarity(table: Dictionary, rarity: String, boost: float) -> Dictionary:
-	var out := table.duplicate(true)
-	if out.has(rarity):
-		out[rarity] *= boost
-	return out
-
-func _normalize(table: Dictionary) -> Dictionary:
+func _normalize_rates(table: Dictionary) -> Dictionary:
 	var total := 0.0
 	for v in table.values():
 		total += v
+	
 	if total <= 0.0:
 		return table
-	var out := {}
+	
+	var normalized := {}
 	for k in table.keys():
-		out[k] = table[k] / total
-	return out
+		normalized[k] = table[k] / total
+	
+	return normalized
 
-# -------------------------------------------------
-# Rarity Ranking
-# -------------------------------------------------
-func _rank(rarity: String) -> int:
+func _rarity_rank(rarity: String) -> int:
 	match rarity.to_lower():
 		"common": return 1
 		"uncommon": return 2

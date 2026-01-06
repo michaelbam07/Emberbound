@@ -1,17 +1,17 @@
+# Alternative structure for hub/main menu scene
 Main (Node)
-├─ GachaManager (Node) [scripts/managers/GachaManager.gd]
-├─ PlayerData (Node) [scripts/managers/PlayerData.gd]
-├─ UIManager (Node) [scripts/managers/UIManager.gd]
-├─ AudioManager (Node) [optional, for SFX & music]
-├─ CanvasLayer
-│   ├─ DimBackground (ColorRect)
-│   ├─ PopupLayer
-│   │   └─ PopupManager (PopupManager.tscn)
-│   ├─ GachaUI (GachaUI.tscn)
-│   │   └─ BannerPanel (BannerPanel.tscn)
-│   ├─ InventoryUI (InventoryUI.tscn)
-│   └─ CampfireUI (CampfireUI.tscn)
-└─ AnimationPlayer (AnimationPlayer)
+├─ GameManager (Node)
+├─ UIManager (Node)
+├─ AudioManager (Node)
+├─ CanvasLayer (UI layer)
+│   ├─ DimBackground
+│   ├─ PopupLayer → PopupManager
+│   ├─ MainMenuUI (if you have one)
+│   ├─ GachaUI
+│   ├─ InventoryUI
+│   └─ CampfireUI
+└─ GameViewport (SubViewport or Node2D for actual gameplay)
+    └─ Camera2D
 
 [gd_scene load_steps=6 format=3]
 

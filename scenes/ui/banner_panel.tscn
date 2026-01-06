@@ -1,7 +1,90 @@
-BannerPanel (Control)
-├─ TitleLabel (Label)
-├─ FeaturedUnits (VBoxContainer)
-├─ SinglePullButton (Button)
-├─ MultiPullButton (Button)
-├─ CloseButton (Button)
-└─ AnimationPlayer (AnimationPlayer)
+[node name="BannerPanel" type="Control"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400
+offset_top = -300
+offset_right = 400
+offset_bottom = 300
+script = ExtResource(1)  # BannerPanel.gd
+
+[node name="Background" type="NinePatchRect" parent="."]
+texture = preload("res://assets/ui/banner_bg.9.png")  # Your fancy banner frame
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40
+offset_top = 40
+offset_right = -40
+offset_bottom = -80
+theme_override_constants/separation = 20
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer"]
+text = "Wanderers of the Ashbelt"
+horizontal_alignment = CENTER
+theme_override_font_sizes/font_size = 48
+theme_override_colors/font_color = Color(1, 0.8, 0.3, 1)  # Gold glow
+
+[node name="FeaturedLabel" type="Label" parent="VBoxContainer"]
+text = "FEATURED"
+horizontal_alignment = CENTER
+theme_override_font_sizes/font_size = 24
+
+[node name="FeaturedUnits" type="HBoxContainer" parent="VBoxContainer"]
+alignment = CENTER
+theme_override_constants/separation = 30
+
+# We'll instance featured unit previews here dynamically
+
+[node name="RatesButton" type="Button" parent="VBoxContainer"]
+text = "Drop Rates ►"
+align = Button.ALIGN_LEFT
+
+[node name="PityCounter" type="Label" parent="VBoxContainer"]
+text = "Pity: 0 / 50 (Legendary Guaranteed)"
+horizontal_alignment = CENTER
+theme_override_colors/font_color = Color(1, 0.5, 0.8, 1)
+
+[node name="PullButtons" type="HBoxContainer" parent="VBoxContainer"]
+alignment = CENTER
+theme_override_constants/separation = 60
+
+[node name="SinglePullButton" type="Button" parent="VBoxContainer/PullButtons"]
+text = "Single Pull\n(100 Dust)"
+icon = preload("res://assets/icons/single_pull.png")
+theme_override_font_sizes/font_size = 28
+
+[node name="MultiPullButton" type="Button" parent="VBoxContainer/PullButtons"]
+text = "10x Pull\n(900 Dust)"
+icon = preload("res://assets/icons/multi_pull.png")
+theme_override_font_sizes/font_size = 28
+
+[node name="CloseButton" type="Button" parent="."]
+layout_mode = 1
+anchor_left = 1.0
+anchor_top = 0.0
+offset_left = -60
+offset_top = 20
+text = "X"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."] 
+
+# Add under main container
+[node name="PityCounter" type="Label" parent="."]
+anchor_top = 0.8
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200
+offset_right = 200
+text = "Pity: 0 / 50"
+horizontal_alignment = CENTER
+theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color.WHITE

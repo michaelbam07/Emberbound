@@ -1,10 +1,130 @@
-InventoryItemCard (PanelContainer)
-├─ Border (TextureRect)        # Glow / animated frame
-├─ VBoxContainer
-│  ├─ Icon (TextureRect)
-│  ├─ NameLabel (Label)
-│  ├─ RarityLabel (Label)
-│  ├─ LevelLabel (Label)
-├─ AnimationPlayer
-├─ Tooltip (Control)
-   ├─ Background (ColorRect)
+[node name="InventoryItemCard" type="PanelContainer"]
+custom_minimum_size = Vector2(160, 240)
+script = ExtResource(1)  # InventoryItemCard.gd
+
+# Rarity-based animated border/glow
+[node name="Border" type="NinePatchRect" parent="."]
+texture = preload("res://assets/ui/item_frame.9.png")  # Base frame
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="GlowEffect" type="ColorRect" parent="Border"]
+color = Color(1, 1, 0.3, 0.4)  # Default yellow glow
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+visible = false  # Dynamic
+
+# Main content
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -70.0
+offset_top = -110.0
+offset_right = 70.0
+offset_bottom = 110.0
+alignment = 1
+theme_override_constants/separation = 8
+
+[node name="Icon" type="TextureRect" parent="VBoxContainer"]
+layout_mode = 0
+offset_right = 140.0
+offset_bottom = 140.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+stretch_mode = 6
+expand_mode = 1
+
+[node name="NameLabel" type="Label" parent="VBoxContainer"]
+text = "Rusty Revolver"
+horizontal_alignment = CENTER
+vertical_alignment = CENTER
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/outline_size = 1
+
+[node name="RarityLabel" type="Label" parent="VBoxContainer"]
+text = "★☆☆☆☆☆"
+horizontal_alignment = CENTER
+vertical_alignment = CENTER
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color.GRAY
+
+[node name="LevelLabel" type="Label" parent="VBoxContainer"]
+text = "Lv. 1"
+horizontal_alignment = CENTER
+vertical_alignment = CENTER
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+
+# Drag handle (optional for reordering)
+[node name="DragHandle" type="TextureButton" parent="."]
+texture_normal = preload("res://assets/ui/drag_icon.png")
+layout_mode = 1
+anchor_top = 1.0
+anchor_right = 1.0
+offset_top = -30.0
+offset_right = -10.0
+offset_bottom = -10.0
+
+# Tooltip (pops up on hover/focus)
+[node name="Tooltip" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -250.0
+offset_right = 200.0
+offset_bottom = 50.0
+
+[node name="TooltipBackground" type="NinePatchRect" parent="Tooltip"]
+texture = preload("res://assets/ui/tooltip_bg.9.png")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="TooltipVBox" type="VBoxContainer" parent="Tooltip"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = -12.0
+
+[node name="TooltipTitle" type="Label" parent="Tooltip/TooltipVBox"]
+text = "Rusty Revolver"
+horizontal_alignment = CENTER
+theme_override_font_sizes/font_size = 24
+
+[node name="StatsContainer" type="HBoxContainer" parent="Tooltip/TooltipVBox"]
+theme_override_constants/separation = 20
+
+[node name="TooltipStats" type="VBoxContainer" parent="Tooltip/TooltipVBox/StatsContainer"]
+theme_override_constants/separation = 4
+
+[node name="TooltipLore" type="Label" parent="Tooltip/TooltipVBox"]
+text = "Better than a rock."
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.9, 0.9, 0.7, 1)
+
+# Animations
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]

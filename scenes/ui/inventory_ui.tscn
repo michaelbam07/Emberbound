@@ -1,13 +1,81 @@
-InventoryUI (Control)
-├─ CanvasLayer
-│  ├─ DimBackground (ColorRect)
-│  ├─ Panel (PanelContainer)
-│  │  ├─ VBoxContainer
-│  │  │  ├─ TitleLabel (Label)
-│  │  │  ├─ TabBar (TabBar)   # Companions | Weapons
-│  │  │  ├─ ScrollContainer
-│  │  │  │  └─ GridContainer
-│  │  │  │     └─ InventoryItemCard (instanced)
-│  │  │  ├─ CloseButton (Button)
-│  ├─ PopupLayer (CanvasLayer)
-│     └─ PopupManager
+[node name="InventoryUI" type="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource(1)  # inventory_ui.gd
+
+# Dim overlay
+[node name="DimBackground" type="ColorRect" parent="."]
+color = Color(0, 0, 0, 0.7)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+# Main panel
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -600
+offset_top = -400
+offset_right = 600
+offset_bottom = 400
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20
+offset_top = 20
+offset_right = -20
+offset_bottom = -20
+theme_override_constants/separation = 20
+
+[node name="TitleLabel" type="Label" parent="Panel/VBoxContainer"]
+text = "Your Collection"
+horizontal_alignment = CENTER
+theme_override_font_sizes/font_size = 48
+theme_override_colors/font_color = Color(1, 0.8, 0.3, 1)
+
+[node name="TabBar" type="TabBar" parent="Panel/VBoxContainer"]
+layout_mode = 2
+tabs = ["Companions", "Weapons"]
+current_tab = 0
+theme_override_font_sizes/font_size = 24
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+vertical_scroll_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="Panel/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+columns = 6
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 20
+
+# Close button
+[node name="CloseButton" type="Button" parent="Panel"]
+layout_mode = 1
+anchor_left = 1.0
+anchor_top = 0.0
+offset_left = -80
+offset_top = 20
+offset_right = -30
+offset_bottom = 80
+text = "X"
+
+# Popup layer
+[node name="PopupLayer" type="CanvasLayer" parent="."]
+layer = 3
+
+[node name="PopupManager" parent="PopupLayer" instance=ExtResource(2)]  # PopupManager.tscn
+
+# Animations
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]

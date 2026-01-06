@@ -1,9 +1,22 @@
+# scripts/data/DialogueDatabase.gd
 extends Node
+class_name DialogueDatabase
 
 # =====================
-# Dialogue Database
+# Emberbound - Dialogue Database
+# Typed, fast lookup, random seed safe, expandable
 # =====================
-const DIALOGUE = {
+
+# Fast lookup: trigger_id → Array[DialogueLine]
+@onready var _dialogue_by_trigger: Dictionary = DIALOGUE.duplicate()
+
+# Optional: Define a simple struct-like class for clarity (Godot 4 supports inner classes)
+class DialogueLine extends RefCounted:
+	var speaker: String = ""
+	var text: String = ""
+
+# Master dialogue data – cleaned up with consistent keys
+const DIALOGUE: Dictionary = {
 	# --- Campfire / Idle Banter ---
 	"campfire_idle": [
 		{"speaker": "ASH-9", "text": "You ever notice the fire hums louder when no one's talking?"},
@@ -29,6 +42,10 @@ const DIALOGUE = {
 		{"speaker": "VIREX", "text": "Weapon specs are within the top 15th percentile. Acceptable."},
 		{"speaker": "ASH-9", "text": "Finally, something that doesn't rattle when I shake it."}
 	],
+	"after_pull_epic": [
+		{"speaker": "ASH-9", "text": "Whoa. This one's humming with energy."},
+		{"speaker": "VIREX", "text": "Power output exceeds expected parameters by 180%. Proceed with caution."}
+	],
 	"after_pull_legendary": [
 		{"speaker": "ASH-9", "text": "Huh. Guess fate finally blinked."},
 		{"speaker": "VIREX", "text": "Anomaly detected. This power signature shouldn't exist here."},
@@ -53,29 +70,18 @@ const DIALOGUE = {
 		{"speaker": "ASH-9", "text": "Just a scratch. A very deep, bleeding scratch."},
 		{"speaker": "VIREX", "text": "Vital signs are becoming... rhythmic. Not in a good way."}
 	],
-	"enemy_spotted_large": [
-		{"speaker": "ASH-9", "text": "That's a lot of teeth for one creature."},
-		{"speaker": "VIREX", "text": "Target size exceeds standard parameters. Aim for the vents."},
-		{"speaker": "ASH-9", "text": "Why is the big one always looking at me?"}
-	],
 
-	# --- Exploration Banter ---
+	# --- Exploration ---
 	"empty_room": [
 		{"speaker": "ASH-9", "text": "Dust and echoes. My favorite."},
-		{"speaker": "VIREX", "text": "Scanning... nothing but silicon and disappointment."},
-		{"speaker": "ASH-9", "text": "Maybe the treasure is the friends we made along the— okay, even I can't say that with a straight face."}
+		{"speaker": "VIREX", "text": "Scanning... nothing but silicon and disappointment."}
 	],
 	"found_secret": [
 		{"speaker": "VIREX", "text": "Structural anomaly detected. A hidden compartment."},
-		{"speaker": "ASH-9", "text": "Nice eye, Virex! Let's see what they tried to hide."},
-		{"speaker": "ASH-9", "text": "Hidden walls. The oldest trick in the book."}
-	],
-	"dark_area": [
-		{"speaker": "ASH-9", "text": "I don't like the way the shadows are moving."},
-		{"speaker": "VIREX", "text": "Shadows do not move, Ash. The light source does. Usually towards something hungry."}
+		{"speaker": "ASH-9", "text": "Nice eye, Virex! Let's see what they tried to hide."}
 	],
 
-	# --- Character Specific Quirks ---
+	# --- Character Quirks ---
 	"virex_glitch": [
 		{"speaker": "VIREX", "text": "E-e-error. Logic loop encountered. Does a machine dream of... sheep? No, that's ridiculous."},
 		{"speaker": "ASH-9", "text": "You okay there, chrome-dome? Your eye is twitching."}
@@ -87,14 +93,28 @@ const DIALOGUE = {
 }
 
 # =====================
-# Logic Functions
+# Public API
 # =====================
 
-func get_random_dialogue(trigger_id: String) -> Dictionary:
-	if DIALOGUE.has(trigger_id):
-		var list = DIALOGUE[trigger_id]
-		return list[randi() % list.size()]
-	return {"speaker": "???", "text": "..."}
+func get_random_line(trigger_id: String) -> Dictionary:
+	var lines: Array = _dialogue_by_trigger.get(trigger_id, [])
+	if lines.is_empty():
+		push_warning("No dialogue found for trigger: ", trigger_id)
+		return {"speaker": "???", "text": "..."}
+	return lines[randi() % lines.size()]
 
-func get_full_conversation(trigger_id: String) -> Array:
-	return DIALOGUE.get(trigger_id, [])
+func get_full_conversation(trigger_id: String) -> Array[Dictionary]:
+	return _dialogue_by_trigger.get(trigger_id, []).duplicate()
+
+func has_trigger(trigger_id: String) -> bool:
+	return _dialogue_by_trigger.has(trigger_id)
+
+# Bonus: Play a full sequence with delay (use in UI or narrator)
+signal dialogue_line_played(line: Dictionary)
+
+func play_conversation(trigger_id: String, delay_between_lines: float = 3.0) -> void:
+	var lines: Array[Dictionary] = get_full_conversation(trigger_id)
+	for line in lines:
+		dialogue_line_played.emit(line)
+		if delay_between_lines > 0:
+			await get_tree().create_timer(delay_between_lines).timeout

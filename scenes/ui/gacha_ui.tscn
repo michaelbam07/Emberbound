@@ -1,14 +1,50 @@
-GachaUI (Control)        [script: gacha_ui.gd – optional]
-├── CanvasLayer
-│   ├── DimBackground (ColorRect)
-│   ├── BannerPanel (Control)   [script: BannerPanel.gd]
-│   │   ├── Panel
-│   │   │   ├── TitleLabel (Label)
-│   │   │   ├── FeaturedUnits (VBoxContainer)
-│   │   │   ├── PullButtons (HBoxContainer)
-│   │   │   │   ├── SinglePullButton (Button)
-│   │   │   │   └── MultiPullButton (Button)
-│   │   │   └── CloseButton (Button)
-│   └── PopupLayer (Node)
-│       └── PopupManager (Node) [script: PopupManager.gd]
-├─ AnimationPlayer (AnimationPlayer)
+[node name="GachaUI" type="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource(1)  # gacha_ui.gd
+
+# Dim overlay for depth
+[node name="DimBackground" type="ColorRect" parent="."]
+color = Color(0, 0, 0, 0.6)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+visible = true
+
+# Main CanvasLayer for UI elements
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 2
+
+# Current active banner panel (we'll instance dynamically or show/hide pre-placed ones)
+[node name="BannerContainer" type="CenterContainer" parent="CanvasLayer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="BannerPanel" parent="CanvasLayer/BannerContainer" instance=ExtResource(2)]  # Your BannerPanel.tscn
+visible = false  # Start hidden until a banner is selected
+
+# Banner selection carousel (left side or top tab bar)
+[node name="BannerSelector" type="HBoxContainer" parent="CanvasLayer"]
+anchor_top = 0.05
+anchor_left = 0.05
+anchor_right = 0.95
+offset_top = 40
+offset_bottom = 200
+alignment = CENTER
+theme_override_constants/separation = 40
+
+# We'll populate this dynamically with small banner thumbnails
+
+# Popup layer for rates, confirmations, etc.
+[node name="PopupLayer" type="CanvasLayer" parent="."]
+layer = 3
+
+[node name="PopupManager" parent="PopupLayer" instance=ExtResource(3)]  # PopupManager.tscn
+
+# Global animations (fade in/out, shake on no currency, etc.)
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]

@@ -1,4 +1,52 @@
-PopupMessage (Control)
-├─ Panel (Panel)
-│  └─ MessageLabel (Label)
-└─ AnimationPlayer (AnimationPlayer)
+[node name="PopupMessage" type="Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300
+offset_top = -100
+offset_right = 300
+offset_bottom = 100
+script = ExtResource(1)  # popup_message.gd
+
+# Dim background (optional, can be toggled)
+[node name="DimOverlay" type="ColorRect" parent="."]
+color = Color(0, 0, 0, 0.4)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+visible = false
+
+# Main panel with rounded corners & glow
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_styles/panel = SubResource(1)  # Use a StyleBoxFlat with glow
+
+[node name="MessageLabel" type="Label" parent="Panel"]
+layout_mode = 2
+text = "Message here"
+horizontal_alignment = CENTER
+vertical_alignment = CENTER
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 32
+theme_override_colors/font_color = Color(1, 0.9, 0.7, 1)
+theme_override_constants/outline_size = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+
+# Subtle glow effect around text
+[node name="Glow" type="ColorRect" parent="Panel"]
+color = Color(1, 0.8, 0.3, 0.2)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+visible = false
+
+# AnimationPlayer for entrance/exit
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]

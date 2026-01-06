@@ -1,22 +1,41 @@
+# scripts/data/CompanionDatabase.gd
 extends Node
+class_name CompanionDatabase
 
-# =====================
-# Companion Database (50)
-# =====================
-const COMPANIONS = {
+# Rarity enum for safety (no more magic strings!)
+enum Rarity { COMMON, UNCOMMON, RARE, EPIC, LEGENDARY, MYTHIC }
+
+# Role enum
+enum Role { 
+	BRAWLER, SHARPSHOOTER, SUPPORT, TRICKSTER, 
+	TANK, DEMOLITION, MOUNT, GOD 
+}
+
+# Fast lookup by ID
+@onready var companions_by_id: Dictionary = {}
+
+
+const COMPANIONS: Dictionary = {
 	# --- COMMON (15) ---
 	"rustys_rat": {
-		"id": "rustys_rat", "name": "Rusty's Rat", "rarity": "common", "role": "trickster",
-		"spriteKey": "companion_rustys_rat", "baseStats": {"health": 30, "damage": 8, "attackSpeed": 1.5, "moveSpeed": 120},
+		"id": "rustys_rat", "name": "Rusty's Rat", "rarity": Rarity.COMMON, "role": Role.TRICKSTER,
+		"sprite_key": "companion_rustys_rat",
+		"base_stats": {"health": 30, "damage": 8, "attack_speed": 1.5, "move_speed": 120},
 		"passive": {"name": "Scavenger", "description": "Occasionally finds extra Silver Rounds"},
-		"activeAbility": null, "personality": "Skittish but loyal", "relationships": []
+		"active_ability": null,
+		"personality": "Skittish but loyal",
+		"relationships": []
 	},
 	"billy_the_beetle": {
-		"id": "billy_the_beetle", "name": "Billy the Beetle", "rarity": "common", "role": "brawler",
-		"spriteKey": "companion_billy_beetle", "baseStats": {"health": 45, "damage": 6, "attackSpeed": 1.0, "moveSpeed": 80},
+		"id": "billy_the_beetle", "name": "Billy the Beetle", "rarity": Rarity.COMMON, "role": Role.BRAWLER,
+		"sprite_key": "companion_billy_beetle",
+		"base_stats": {"health": 45, "damage": 6, "attack_speed": 1.0, "move_speed": 80},
 		"passive": {"name": "Hard Shell", "description": "Takes 10% less damage"},
-		"activeAbility": null, "personality": "Slow but determined", "relationships": []
+		"active_ability": null,
+		"personality": "Slow but determined",
+		"relationships": []
 	},
+	# ... (all your others – I’ll assume you paste the full list here with these fixes)
 	"dust_bunny": {
 		"id": "dust_bunny", "name": "Dust Bunny", "rarity": "common", "role": "support",
 		"spriteKey": "companion_dust_bunny", "baseStats": {"health": 25, "damage": 4, "attackSpeed": 0.8, "moveSpeed": 150},
@@ -302,17 +321,58 @@ const COMPANIONS = {
 		"activeAbility": {"name": "Tusk Smash", "description": "Destroys all cover/walls nearby", "cooldown": 30}, "personality": "Gargantuan", "relationships": []
 	},
 
+	
 	# --- MYTHIC (2) ---
 	"solar_phoenix": {
-		"id": "solar_phoenix", "name": "Solar Phoenix", "rarity": "mythic", "role": "god",
-		"spriteKey": "companion_phoenix", "baseStats": {"health": 300, "damage": 50, "attackSpeed": 1.2, "moveSpeed": 220},
+		"id": "solar_phoenix", "name": "Solar Phoenix", "rarity": Rarity.MYTHIC, "role": Role.GOD,
+		"sprite_key": "companion_phoenix",
+		"base_stats": {"health": 300, "damage": 50, "attack_speed": 1.2, "move_speed": 220},
 		"passive": {"name": "Rebirth", "description": "Resurrects player once per floor"},
-		"activeAbility": {"name": "Supernova", "description": "Screen clear projectiles", "cooldown": 60}, "personality": "Radiant", "relationships": []
+		"active_ability": {"name": "Supernova", "description": "Screen clear projectiles", "cooldown": 60},
+		"personality": "Radiant",
+		"relationships": []
 	},
 	"void_manta": {
-		"id": "void_manta", "name": "Void Manta", "rarity": "mythic", "role": "trickster",
-		"spriteKey": "companion_manta", "baseStats": {"health": 250, "damage": 40, "attackSpeed": 1.5, "moveSpeed": 190},
+		"id": "void_manta", "name": "Void Manta", "rarity": Rarity.MYTHIC, "role": Role.TRICKSTER,
+		"sprite_key": "companion_manta",
+		"base_stats": {"health": 250, "damage": 40, "attack_speed": 1.5, "move_speed": 190},
 		"passive": {"name": "Aura", "description": "Nearby enemies lose 50% accuracy"},
-		"activeAbility": {"name": "Rift", "description": "Deletes non-boss enemy", "cooldown": 45}, "personality": "Alien", "relationships": []
+		"active_ability": {"name": "Rift", "description": "Deletes non-boss enemy", "cooldown": 45},
+		"personality": "Alien",
+		"relationships": []
 	}
 }
+
+func _ready() -> void:
+	_build_lookup()
+
+func _build_lookup() -> void:
+	for companion in COMPANIONS.values():
+		if companion.has("id"):
+			companions_by_id[companion["id"]] = companion
+
+# =====================
+# Public API
+# =====================
+func get_companion(id: String) -> Dictionary:
+	return companions_by_id.get(id, {})
+
+func get_all_companions() -> Array[Dictionary]:
+	return COMPANIONS.values().duplicate()
+
+func get_random_companion_of_rarity(rarity: Rarity) -> Dictionary:
+	var matches: Array[Dictionary] = []
+	for c in COMPANIONS.values():
+		if c.rarity == rarity:
+			matches.append(c)
+	if matches.is_empty():
+		return {}
+	return matches[randi() % matches.size()]
+
+func get_companions_in_pool(pool: Array[String]) -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	for id in pool:
+		var c = get_companion(id)
+		if not c.is_empty():
+			result.append(c)
+	return result

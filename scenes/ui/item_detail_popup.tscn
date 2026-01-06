@@ -1,14 +1,123 @@
-ItemDetailPopup (Control)
-HBoxContainer
-├─ OptionButton (Sort)
-├─ OptionButton (Filter)
-├─ Panel
-│  ├─ VBoxContainer
-│  │  ├─ NameLabel
-│  │  ├─ RarityLabel
-│  │  ├─ StatsLabel
-│  │  ├─ DescriptionLabel
-│  │  ├─ CloseButton
-├─ AnimationPlayer
-├─ Tooltip (Control)
-   ├─ Background (ColorRect)
+[node name="ItemDetailPopup" type="Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450
+offset_top = -300
+offset_right = 450
+offset_bottom = 300
+script = ExtResource(1)  # item_detail_popup.gd
+
+# Background dim + panel
+[node name="DimBackground" type="ColorRect" parent="."]
+color = Color(0, 0, 0, 0.6)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1000
+offset_top = -1000
+offset_right = 1000
+offset_bottom = 1000
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_styles/panel = SubResource(1)  # Fancy rounded border with glow
+
+# Main layout
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 30
+offset_top = 30
+offset_right = -30
+offset_bottom = -30
+theme_override_constants/separation = 40
+
+# Left: Icon + Rarity Glow
+[node name="IconContainer" type="VBoxContainer" parent="HBoxContainer"]
+alignment = CENTER
+size_flags_horizontal = 3
+
+[node name="RarityGlow" type="ColorRect" parent="HBoxContainer/IconContainer"]
+color = Color(1, 0.8, 0, 0.4)
+custom_minimum_size = Vector2(300, 300)
+layout_mode = 2
+
+[node name="ItemIcon" type="TextureRect" parent="HBoxContainer/IconContainer"]
+custom_minimum_size = Vector2(280, 280)
+layout_mode = 2
+stretch_mode = 6
+expand_mode = 1
+
+# Right: Details
+[node name="DetailsVBox" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="NameLabel" type="Label" parent="HBoxContainer/DetailsVBox"]
+text = "God Slayer"
+horizontal_alignment = CENTER
+theme_override_font_sizes/font_size = 48
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+
+[node name="RarityLabel" type="Label" parent="HBoxContainer/DetailsVBox"]
+text = "★★★★★★ Mythic"
+horizontal_alignment = CENTER
+theme_override_font_sizes/font_size = 32
+
+[node name="TypeLabel" type="Label" parent="HBoxContainer/DetailsVBox"]
+text = "Melee Weapon"
+horizontal_alignment = CENTER
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+
+[node name="StatsLabel" type="RichTextLabel" parent="HBoxContainer/DetailsVBox"]
+text = "[b]Damage:[/b] 350\n[b]Fire Rate:[/b] 1.0\n[b]Range:[/b] 120"
+fit_content = true
+scroll_active = false
+theme_override_font_sizes/normal_font_size = 24
+
+[node name="PassiveLabel" type="Label" parent="HBoxContainer/DetailsVBox"]
+text = "[Passive] Omni-Slash: Every hit strikes twice"
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.2, 1, 0.2, 1)
+
+[node name="ActiveLabel" type="Label" parent="HBoxContainer/DetailsVBox"]
+text = "[Active] Ascension: Invulnerable for 10s (120s CD)"
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(1, 0.8, 0, 1)
+
+[node name="DescriptionLabel" type="Label" parent="HBoxContainer/DetailsVBox"]
+text = "Kneel."
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(1, 0.9, 0.7, 1)
+
+# Close button
+[node name="CloseButton" type="Button" parent="Panel"]
+layout_mode = 1
+anchor_left = 1.0
+anchor_top = 0.0
+offset_left = -80
+offset_top = 20
+offset_right = -30
+offset_bottom = 80
+text = "X"
+theme_override_font_sizes/font_size = 32
+
+# Animations
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]

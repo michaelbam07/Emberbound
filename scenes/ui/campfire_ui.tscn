@@ -1,5 +1,109 @@
-CampfireUI (Control)
-├─ CampfireSprite (TextureRect)
-├─ BonusPullButton (Button)
-├─ CloseButton (Button)
-└─ AnimationPlayer (AnimationPlayer)
+[node name="CampfireUI" type="Control"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500
+offset_top = -350
+offset_right = 500
+offset_bottom = 350
+script = ExtResource(1)  # CampfireUI.gd
+
+# Background (dark translucent panel with campfire glow)
+[node name="Background" type="NinePatchRect" parent="."]
+texture = preload("res://assets/ui/campfire_bg.9.png")  # Warm, wooden frame
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+# Ambient fire glow
+[node name="FireGlow" type="ColorRect" parent="."]
+color = Color(1.0, 0.5, 0.2, 0.15)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+# Main campfire visual
+[node name="CampfireSprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, 80)
+scale = Vector2(2, 2)
+sprite_frames = SubResource(1)  # Your campfire animation (idle + burning brighter)
+animation = "idle"
+playing = true
+
+# Title
+[node name="TitleLabel" type="Label" parent="."]
+text = "The Campfire"
+horizontal_alignment = CENTER
+anchor_top = 0.05
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300
+offset_right = 300
+theme_override_font_sizes/font_size = 56
+theme_override_colors/font_color = Color(1, 0.7, 0.3, 1)
+
+# Instructions
+[node name="InfoLabel" type="Label" parent="."]
+text = "Sacrifice duplicate companions/weapons to strengthen the flames..."
+horizontal_alignment = CENTER
+anchor_top = 0.18
+anchor_left = 0.2
+anchor_right = 0.8
+theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+
+# Dust / Currency Display
+[node name="DustCounter" type="HBoxContainer" parent="."]
+anchor_top = 0.3
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200
+offset_right = 200
+alignment = CENTER
+
+[node name="DustIcon" type="TextureRect" parent="DustCounter"]
+texture = preload("res://assets/icons/dust.png")
+size_flags_vertical = 3
+
+[node name="DustLabel" type="Label" parent="DustCounter"]
+text = "0 Dust"
+theme_override_font_sizes/font_size = 36
+
+# Bonus Pull Button (the star of the show!)
+[node name="BonusPullButton" type="Button" parent="."]
+anchor_top = 0.65
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -180
+offset_right = 180
+offset_top = -80
+offset_bottom = 80
+text = "BONUS PULL!\n(Requires 500 Dust)"
+disabled = true
+theme_override_font_sizes/font_size = 40
+theme_override_colors/font_color_disabled = Color(0.5, 0.5, 0.5, 1)
+
+# Close button
+[node name="CloseButton" type="Button" parent="."]
+anchor_left = 1.0
+anchor_top = 0.0
+offset_left = -80
+offset_top = 30
+offset_right = -30
+offset_bottom = 80
+text = "X"
+
+# Particles for extra juiciness
+[node name="FlameParticles" type="GPUParticles2D" parent="CampfireSprite"]
+process_material = SubResource(2)  # Warm orange/red flames
+emitting = true
+
+[node name="SparkParticles" type="GPUParticles2D" parent="CampfireSprite"]
+process_material = SubResource(3)  # Occasional sparks
+emitting = true
+
+# AnimationPlayer for feedback
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."] 

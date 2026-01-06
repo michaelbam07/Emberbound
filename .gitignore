@@ -1,0 +1,29 @@
+# Godot 4+ specific ignores
+.godot/
+.nomedia
+
+# Godot-specific ignores
+.import/
+export.cfg
+export_presets.cfg
+*.tmp
+
+# Imported translations (automatically generated from CSV files)
+*.translation
+*.import
+
+# Mono-specific ignores (if you're using C#)
+/mono/
+/.data_mono/
+
+# Android export
+.android/
+
+# OS-specific caches and junk
+.DS_Store
+Thumbs.db
+
+# Editor/IDE specific (optional but recommended for clean repos)
+.vscode/
+.idea/
+*.code-workspace

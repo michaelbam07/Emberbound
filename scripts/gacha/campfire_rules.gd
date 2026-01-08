@@ -122,4 +122,7 @@ func mark_dialogue_used(dialogue_id: String) -> void:
 # Helper
 # =====================
 func _pair_key(a: String, b: String) -> String:
-	return a < b ? "%s|%s" % [a, b] : "%s|%s" % [b, a]
+	if a < b:
+		return "%s|%s" % [a, b]
+	else:
+		return "%s|%s" % [b, a]

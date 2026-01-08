@@ -1,53 +1,82 @@
-# Alternative structure for hub/main menu scene
-Main (Node)
-├─ GameManager (Node)
-├─ UIManager (Node)
-├─ AudioManager (Node)
-├─ CanvasLayer (UI layer)
-│   ├─ DimBackground
-│   ├─ PopupLayer → PopupManager
-│   ├─ MainMenuUI (if you have one)
-│   ├─ GachaUI
-│   ├─ InventoryUI
-│   └─ CampfireUI
-└─ GameViewport (SubViewport or Node2D for actual gameplay)
-    └─ Camera2D
-
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=10 format=3 uid="uid://main_scene"]
 
 [node name="Main" type="Node"]
-script = ExtResource( 1 ) # GameManager.gd (optional)
+script = ExtResource("1")  # Main.gd or GameManager.gd
+
+# =====================
+# Core Managers (Autoload alternatives — instanced here for clarity)
+# =====================
+[node name="GameManager" type="Node" parent="."]
+script = ExtResource("2")  # GameManager.gd
 
 [node name="GachaManager" type="Node" parent="."]
-script = ExtResource( 2 ) # GachaManager.gd
+script = ExtResource("3")  # GachaManager.gd
 
 [node name="PlayerData" type="Node" parent="."]
-script = ExtResource( 3 ) # PlayerData.gd
+script = ExtResource("4")  # PlayerData.gd
 
 [node name="UIManager" type="Node" parent="."]
-script = ExtResource( 4 ) # UIManager.gd
+script = ExtResource("5")  # UIManager.gd
 
+[node name="AudioManager" type="Node" parent="."]
+script = ExtResource("6")  # AudioManager.gd
+
+[node name="BannerManager" type="Node" parent="."]
+script = ExtResource("7")  # BannerManager.gd
+
+[node name="SaveManager" type="Node" parent="."]
+script = ExtResource("8")  # SaveManager.gd
+
+# =====================
+# UI Layer
+# =====================
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 layer = 1
 
+# Dim overlay for modals
 [node name="DimBackground" type="ColorRect" parent="CanvasLayer"]
-color = Color(0,0,0,0.5)
-rect_min_size = Vector2(1920,1080)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.6)
 visible = false
 
-[node name="PopupLayer" type="Node" parent="CanvasLayer"]
+# Popup system
+[node name="PopupLayer" type="CanvasLayer" parent="CanvasLayer"]
+layer = 10
 
-[node name="PopupManager" parent="CanvasLayer/PopupLayer" instance=ExtResource(5)]
+[node name="PopupManager" parent="CanvasLayer/PopupLayer" instance=ExtResource("9")]  # PopupManager.tscn
 
-[node name="GachaUI" parent="CanvasLayer" instance=ExtResource(6)]
-position = Vector2(0,0)
+# =====================
+# Major UI Screens (Instanced & Hidden)
+# =====================
+[node name="GachaUI" parent="CanvasLayer" instance=ExtResource("10")]
 visible = false
 
-[node name="InventoryUI" parent="CanvasLayer" instance=ExtResource(7)]
-position = Vector2(0,0)
+[node name="InventoryUI" parent="CanvasLayer" instance=ExtResource("11")]
 visible = false
 
-[node name="CampfireUI" parent="CanvasLayer" instance=ExtResource(8)]
-position = Vector2(0,0)
+[node name="CampfireUI" parent="CanvasLayer" instance=ExtResource("12")]
 visible = false
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="PullResultScreen" parent="CanvasLayer" instance=ExtResource("13")]
+visible = false
+
+[node name="ItemDetailPopup" parent="CanvasLayer" instance=ExtResource("14")]
+visible = false
+
+# Optional: Hub background or persistent HUD
+[node name="HUD" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="GlobalHUD" type="Control" parent="HUD"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+# Add currency labels, level, etc. here
+
+# =====================
+# Global AnimationPlayer (for screen transitions)
+# =====================
+[node name="GlobalAnimationPlayer" type="AnimationPlayer" parent="."]

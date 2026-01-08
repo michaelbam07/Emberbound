@@ -1,0 +1,52 @@
+[gd_scene load_steps=5 format=3 uid="uid://hub_scene"]
+
+[node name="Hub" type="Node2D"]
+script = ExtResource("1")  # Hub.gd (below)
+
+[node name="Background" type="Sprite2D"]
+texture = preload("res://assets/backgrounds/wasteland_camp.jpg")  # Your art
+
+[node name="Campfire" type="AnimatedSprite2D"]
+position = Vector2(640, 480)
+scale = Vector2(3, 3)
+sprite_frames = preload("res://assets/animations/campfire_frames.tres")
+playing = true
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="ButtonContainer" type="VBoxContainer" parent="UI"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -150.0
+offset_right = 200.0
+offset_bottom = 150.0
+alignment = 1
+
+[node name="GachaButton" type="Button" parent="UI/ButtonContainer"]
+text = "Enter Gacha"
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 32
+
+[node name="InventoryButton" type="Button" parent="UI/ButtonContainer"]
+text = "Collection"
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 32
+
+[node name="CampfireButton" type="Button" parent="UI/ButtonContainer"]
+text = "Rest at Campfire"
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 32
+
+[node name="RunButton" type="Button" parent="UI/ButtonContainer"]
+text = "Begin Run"
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 32
+
+[node name="QuitButton" type="Button" parent="UI/ButtonContainer"]
+text = "Quit"
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 32

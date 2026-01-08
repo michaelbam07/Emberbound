@@ -1,0 +1,39 @@
+[node name="PullResultScreen" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Background" type="ColorRect"]
+color = Color(0, 0, 0, 0.8)
+
+[node name="CampfireGlow" type="ColorRect"]
+color = Color(1, 0.4, 0.1, 0.2)
+anchor_left = 0.8
+anchor_top = 0.7
+
+[node name="CardContainer" type="HBoxContainer"]
+anchor_top = 0.3
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -500
+offset_right = 500
+alignment = CENTER
+theme_override_constants/separation = 20
+
+# 10 Card slots (instantiated dynamically)
+# Each: PanelContainer with back + front (AnimatedSprite or two TextureRects)
+
+[node name="ContinueButton" type="Button"]
+anchor_top = 0.9
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150
+offset_right = 150
+text = "Continue →"
+visible = false
+
+[node name="AnimationPlayer" type="AnimationPlayer"]
+# summon_ritual, card_flip_1..10, mythic_nova, level_up_burst, finale
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer"]
+# For voice lines
